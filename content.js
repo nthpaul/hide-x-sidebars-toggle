@@ -136,6 +136,37 @@
     await persistEnabledState(enabled);
   }
 
+  function watchStorage() {
+    if (
+      typeof chrome === "undefined" ||
+      !chrome.storage ||
+      !chrome.storage.onChanged
+    ) {
+      return;
+    }
+
+    chrome.storage.onChanged.addListener((changes, areaName) => {
+      if (areaName !== "local" || !changes[STORAGE_KEY]) {
+        return;
+      }
+
+      const nextEnabled = changes[STORAGE_KEY].newValue;
+      if (typeof nextEnabled !== "boolean" || nextEnabled === state.enabled) {
+        return;
+      }
+
+      state.enabled = nextEnabled;
+      applyVisibility();
+      updateButtonState();
+
+      try {
+        window.localStorage.setItem(STORAGE_KEY, String(nextEnabled));
+      } catch (_error) {
+        // Ignore local fallback sync errors.
+      }
+    });
+  }
+
   function createButton() {
     const existing = document.getElementById(BUTTON_ID);
     if (existing) {
@@ -198,6 +229,7 @@
     state.theme = getThemeFromCookie();
     applyVisibility();
     watchTheme();
+    watchStorage();
 
     if (document.body) {
       ensureUi();
