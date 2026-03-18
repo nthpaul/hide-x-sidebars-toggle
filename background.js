@@ -1,4 +1,5 @@
 const STORAGE_KEY = "hxs_sidebar_toggle";
+const TOGGLE_COMMAND = "toggle-sidebars";
 
 function storageGet(key) {
   return new Promise((resolve) => {
@@ -30,11 +31,23 @@ async function syncActionState() {
   updateAction(enabled);
 }
 
-chrome.action.onClicked.addListener(async () => {
+async function toggleEnabledState() {
   const enabled = await loadEnabledState();
   const nextEnabled = !enabled;
   await storageSet(STORAGE_KEY, nextEnabled);
   updateAction(nextEnabled);
+}
+
+chrome.action.onClicked.addListener(async () => {
+  await toggleEnabledState();
+});
+
+chrome.commands.onCommand.addListener(async (command) => {
+  if (command !== TOGGLE_COMMAND) {
+    return;
+  }
+
+  await toggleEnabledState();
 });
 
 chrome.runtime.onInstalled.addListener(() => {
