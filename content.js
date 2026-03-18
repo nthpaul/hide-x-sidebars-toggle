@@ -100,6 +100,50 @@
     return nightMode && nightMode !== "0" ? "dark" : "light";
   }
 
+  function parseRgb(color) {
+    const match = color && color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+    if (!match) {
+      return null;
+    }
+
+    return {
+      r: Number(match[1]),
+      g: Number(match[2]),
+      b: Number(match[3]),
+    };
+  }
+
+  function getThemeFromRenderedPage() {
+    const candidates = [
+      document.querySelector('[data-testid="primaryColumn"]'),
+      document.querySelector("main[role='main']"),
+      document.body,
+      document.documentElement,
+    ];
+
+    for (const element of candidates) {
+      if (!element) {
+        continue;
+      }
+
+      const { backgroundColor } = window.getComputedStyle(element);
+      const rgb = parseRgb(backgroundColor);
+
+      if (!rgb) {
+        continue;
+      }
+
+      const luminance = (0.2126 * rgb.r) + (0.7152 * rgb.g) + (0.0722 * rgb.b);
+      return luminance < 128 ? "dark" : "light";
+    }
+
+    return null;
+  }
+
+  function getThemeMode() {
+    return getThemeFromRenderedPage() || getThemeFromCookie();
+  }
+
   function applyTheme() {
     if (!state.button) {
       return;
@@ -109,7 +153,7 @@
   }
 
   function syncTheme() {
-    const nextTheme = getThemeFromCookie();
+    const nextTheme = getThemeMode();
     if (nextTheme === state.theme) {
       return;
     }
@@ -226,7 +270,7 @@
 
   async function init() {
     state.enabled = await loadEnabledState();
-    state.theme = getThemeFromCookie();
+    state.theme = getThemeMode();
     applyVisibility();
     watchTheme();
     watchStorage();
