@@ -80,7 +80,8 @@ nav[aria-label="Primary"],
 a[href="/compose/post"],
 a[href="/compose/tweet"],
 a[aria-label="X"],
-[data-testid="sidebarColumn"] {
+[data-testid="sidebarColumn"],
+[data-testid="SideNav_AccountSwitcher_Button"] {
   opacity: 1;
   transition: opacity 180ms ease !important;
   will-change: opacity;
@@ -91,7 +92,8 @@ html[data-hxs-sidebars-hidden="true"] [data-testid="SideNav_NewTweet_Button"],
 html[data-hxs-sidebars-hidden="true"] a[href="/compose/post"],
 html[data-hxs-sidebars-hidden="true"] a[href="/compose/tweet"],
 html[data-hxs-sidebars-hidden="true"] a[aria-label="X"],
-html[data-hxs-sidebars-hidden="true"] [data-testid="sidebarColumn"] {
+html[data-hxs-sidebars-hidden="true"] [data-testid="sidebarColumn"],
+html[data-hxs-sidebars-hidden="true"] [data-testid="SideNav_AccountSwitcher_Button"] {
   opacity: 0 !important;
   pointer-events: none !important;
 }
