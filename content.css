@@ -75,6 +75,17 @@
   stroke-dashoffset: 0;
 }
 
+nav[aria-label="Primary"],
+[data-testid="SideNav_NewTweet_Button"],
+a[href="/compose/post"],
+a[href="/compose/tweet"],
+a[aria-label="X"],
+[data-testid="sidebarColumn"] {
+  opacity: 1;
+  transition: opacity 180ms ease !important;
+  will-change: opacity;
+}
+
 html[data-hxs-sidebars-hidden="true"] nav[aria-label="Primary"],
 html[data-hxs-sidebars-hidden="true"] [data-testid="SideNav_NewTweet_Button"],
 html[data-hxs-sidebars-hidden="true"] a[href="/compose/post"],
@@ -83,8 +94,6 @@ html[data-hxs-sidebars-hidden="true"] a[aria-label="X"],
 html[data-hxs-sidebars-hidden="true"] [data-testid="sidebarColumn"] {
   opacity: 0 !important;
   pointer-events: none !important;
-  transition: opacity 180ms ease !important;
-  will-change: opacity;
 }
 
 @media (max-width: 900px) {
