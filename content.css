@@ -1,8 +1,3 @@
-:root {
-  --hxs-button-ink: #000;
-  --hxs-button-ink-strong: #000;
-}
-
 #hxs-leaf-toggle {
   position: fixed;
   left: 10px;
@@ -16,7 +11,7 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--hxs-button-ink);
+  color: #000;
   cursor: pointer;
   transition:
     color 180ms ease,
@@ -24,13 +19,25 @@
 }
 
 #hxs-leaf-toggle:hover {
-  color: var(--hxs-button-ink-strong);
+  color: #000;
+}
+
+#hxs-leaf-toggle[data-hxs-theme="dark"] {
+  color: #fff;
+}
+
+#hxs-leaf-toggle[data-hxs-theme="dark"]:hover {
+  color: #fff;
 }
 
 #hxs-leaf-toggle:focus-visible {
   outline: 2px solid rgba(0, 0, 0, 0.55);
   outline-offset: 4px;
   border-radius: 8px;
+}
+
+#hxs-leaf-toggle[data-hxs-theme="dark"]:focus-visible {
+  outline-color: rgba(255, 255, 255, 0.65);
 }
 
 #hxs-leaf-toggle svg {

@@ -3,10 +3,15 @@
   const BUTTON_ID = "hxs-leaf-toggle";
   const ACTIVE_CLASS = "is-active";
   const ROOT_ATTRIBUTE = "data-hxs-sidebars-hidden";
+  const THEME_ATTRIBUTE = "data-hxs-theme";
+  const THEME_COOKIE = "night_mode";
+  const THEME_CHECK_MS = 1500;
 
   const state = {
     button: null,
     enabled: true,
+    theme: "light",
+    themeTimer: null,
   };
 
   function getStorageArea() {
@@ -77,6 +82,42 @@
     document.documentElement.setAttribute(ROOT_ATTRIBUTE, state.enabled ? "true" : "false");
   }
 
+  function readCookie(name) {
+    const cookies = document.cookie ? document.cookie.split("; ") : [];
+
+    for (const cookie of cookies) {
+      const [rawName, ...rest] = cookie.split("=");
+      if (rawName === name) {
+        return rest.join("=");
+      }
+    }
+
+    return null;
+  }
+
+  function getThemeFromCookie() {
+    const nightMode = readCookie(THEME_COOKIE);
+    return nightMode && nightMode !== "0" ? "dark" : "light";
+  }
+
+  function applyTheme() {
+    if (!state.button) {
+      return;
+    }
+
+    state.button.setAttribute(THEME_ATTRIBUTE, state.theme);
+  }
+
+  function syncTheme() {
+    const nextTheme = getThemeFromCookie();
+    if (nextTheme === state.theme) {
+      return;
+    }
+
+    state.theme = nextTheme;
+    applyTheme();
+  }
+
   function updateButtonState() {
     if (!state.button) {
       return;
@@ -85,6 +126,7 @@
     state.button.classList.toggle(ACTIVE_CLASS, state.enabled);
     state.button.setAttribute("aria-pressed", String(state.enabled));
     state.button.title = state.enabled ? "Sidebars hidden" : "Sidebars visible";
+    applyTheme();
   }
 
   async function setEnabled(enabled) {
@@ -127,6 +169,22 @@
     updateButtonState();
   }
 
+  function watchTheme() {
+    if (state.themeTimer !== null) {
+      return;
+    }
+
+    state.themeTimer = window.setInterval(() => {
+      syncTheme();
+    }, THEME_CHECK_MS);
+
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        syncTheme();
+      }
+    });
+  }
+
   function ensureUi() {
     if (!document.body) {
       return;
@@ -137,7 +195,9 @@
 
   async function init() {
     state.enabled = await loadEnabledState();
+    state.theme = getThemeFromCookie();
     applyVisibility();
+    watchTheme();
 
     if (document.body) {
       ensureUi();
