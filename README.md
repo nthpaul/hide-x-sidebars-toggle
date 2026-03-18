@@ -1,6 +1,8 @@
 # Hide X Sidebars Toggle
 
-![Tree icon](./assets/tree-icon.svg)
+<p align="center">
+  <img src="./assets/tree-icon.svg" alt="Tree icon" width="140" />
+</p>
 
 A simple Chrome extension for `x.com` and `twitter.com` that fades the left and right sidebars in and out with a single toggle button.
 
