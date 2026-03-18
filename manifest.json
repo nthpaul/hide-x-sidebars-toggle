@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Hide X Sidebars Toggle",
+  "version": "0.1.0",
+  "description": "Hide X sidebars while scrolling and toggle the effect with a leaf button.",
+  "permissions": [
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://x.com/*",
+        "https://twitter.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
